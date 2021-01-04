@@ -67,11 +67,11 @@ try :
                 stddev = 10
 
                 if random.uniform(0, 1) < MUTATION_RATE:
-                    new_genome.w1 += new_genome.w1 * np.random.normal(mean, stddev, size=(24, 10)) / 100 * np.random.randint(-1, 2, (24, 10))
+                    new_genome.w1 += new_genome.w1 * np.random.normal(mean, stddev, size=(Static.INPUT_SIZE, Static.HIDDEN_SIZE)) / 100 * np.random.randint(-1, 2, (Static.INPUT_SIZE, Static.HIDDEN_SIZE))
                 if random.uniform(0, 1) < MUTATION_RATE:
-                    new_genome.w2 += new_genome.w2 * np.random.normal(mean, stddev, size=(10, 10)) / 100 * np.random.randint(-1, 2, (10, 10))
+                    new_genome.w2 += new_genome.w2 * np.random.normal(mean, stddev, size=(Static.HIDDEN_SIZE, Static.HIDDEN_SIZE)) / 100 * np.random.randint(-1, 2, (Static.HIDDEN_SIZE, Static.HIDDEN_SIZE))
                 if random.uniform(0, 1) < MUTATION_RATE:
-                    new_genome.w3 += new_genome.w3 * np.random.normal(mean, stddev, size=(10, 4)) / 100 * np.random.randint(-1, 2, (10, 4))
+                    new_genome.w3 += new_genome.w3 * np.random.normal(mean, stddev, size=(Static.HIDDEN_SIZE, Static.OUTPUT_SIZE)) / 100 * np.random.randint(-1, 2, (Static.HIDDEN_SIZE, Static.OUTPUT_SIZE))
                 
                 nets.append(new_genome)        
 

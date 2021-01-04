@@ -1,14 +1,14 @@
 import numpy as np
-import os.path
+from Snake_Statics import INPUT_SIZE, HIDDEN_SIZE, OUTPUT_SIZE
 
 class SnakeNet() :
-    def __init__(self, hidden = 10, pre_weight = None) :
+    def __init__(self, hidden = HIDDEN_SIZE, pre_weight = None) :
         self.fitness = 0
         self.hidden = hidden
 
-        self.w1 = np.random.randn(24, hidden)
+        self.w1 = np.random.randn(INPUT_SIZE, hidden)
         self.w2 = np.random.randn(hidden, hidden)
-        self.w3 = np.random.randn(hidden, 4)
+        self.w3 = np.random.randn(hidden, OUTPUT_SIZE)
 
     def forward(self, inputs) :
         net = np.matmul(inputs, self.w1)

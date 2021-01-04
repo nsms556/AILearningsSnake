@@ -17,6 +17,7 @@ class SnakeGame :
         self.done = False
         
         self.nn = nn
+        self.distanceFit = DIS_FIT
         
     def play(self) :
         self.player = Snake()
@@ -30,7 +31,8 @@ class SnakeGame :
         self.fitness = 0
         self.last_distance = np.inf
         self.lastItemTime = 0
-        self.lifeTime = LIFE_TIME
+        self.lifeTime = 0
+        self.lifeLeft = LIFE_LEFT
 
         while not self.done :
             self.clock.tick(FPS)
@@ -48,27 +50,53 @@ class SnakeGame :
                         if MOVE_DIR[event.key] + self.player.direction != MOVE_LIMIT and timedelta(seconds=0.1) <= datetime.now() - lastCtrlTime :
                             self.player.direction = MOVE_DIR[event.key]
                             lastCtrlTime = datetime.now()
+                    elif event.key == pygame.K_SPACE :
+                        pause = True
+
+                        while pause :
+                            for ee in pygame.event.get() :
+                                if ee.type == pygame.QUIT :
+                                    raise BreakException
+                                elif ee.type == pygame.KEYDOWN :
+                                    if ee.key == pygame.K_SPACE :
+                                        pause = False
+                                    elif ee.key == pygame.K_ESCAPE :
+                                        raise BreakException
+                                    elif ee.key == pygame.K_p :
+                                        print('Inputs')
+                                        print(inputs)
+                                        print('Outputs')
+                                        print(outputs)
+                                        print('Head')
+                                        print(self.player.posList[0])
+                                        print('Item')
+                                        print(self.item.position)
 
             if self.nn != None :
                 inputs = self.get_inputs()
                 outputs = self.nn.forward(inputs)
                 result = np.argmax(outputs)
 
+                #print(outputs)
                 self.player.direction = MOVE_NN_DIR[result]
                 lastCtrlTime = datetime.now()
-            
+
             if all(self.player.posList[0] == self.item.position) :
                 self.player.grow()
                 self.score += 1
-                self.lifeTime = LIFE_TIME
+                self.lifeLeft = LIFE_LEFT
                 self.item.newPosition()
-                #self.fitness += self.score * 30
 
                 while self.item.position in self.player.posList :
                     self.item.newPosition()
+
+                if self.distanceFit :
+                    self.fitness += 30
             else :
                 self.player.move()
-                self.lifeTime -= 1
+                self.lifeLeft -= 1
+
+            self.lifeTime += 1
 
             if self.player.posList[0].tolist() in self.player.posList[1:].tolist() :
                 self.done = True
@@ -76,15 +104,17 @@ class SnakeGame :
             if self.wallCollide(self.player.posList[0]) :
                 self.done = True
 
-            if self.lifeTime <= 0 and self.nn is not None:
+            if self.lifeLeft <= 0 and self.nn is not None:
                 self.done = True
 
-            self.fitness = self.calcFitness()
-            #self.fitness = self.calcFitness_2(self.fitness)
-
-            self.player.draw(self.screen)
+            if self.distanceFit :
+                self.fitness = self.calcFitness_2(self.fitness)
+            else :
+                self.fitness = self.calcFitness()
+            
             self.item.draw(self.screen)
-
+            self.player.draw(self.screen)
+            
             scoreFont = self.font.render(str(self.score), True, WHITE)
             self.screen.blit(scoreFont, (5,5))
 
@@ -99,7 +129,7 @@ class SnakeGame :
         return False
 
     def bodyCollide(self, point) :
-        if point in self.player.posList :
+        if point.tolist() in self.player.posList[1:].tolist() :
             return True
         
         return False
@@ -111,33 +141,57 @@ class SnakeGame :
         return False
 
     def get_inputs(self) :
-        baseInput = np.zeros(shape = 24)
+        baseInput = np.zeros(shape = INPUT_SIZE)
 
         for i, direction in enumerate(DETECT_DIRS) :
             baseInput[i*3:i*3+3] = self.detection(direction)
-            
+        
+        head = self.player.posList[0]
+        
+        # Straight
+        #if np.any(head == self.item.position) and np.sum(head * DIRECTIONS[self.player.direction]) <= \
+        #   np.sum(self.item.position * DIRECTIONS[self.player.direction]) :
+        #    baseInput[24] = 1
+
+        #print(baseInput)
         return baseInput
 
     def detection(self, direction) :
         sensingPoint = self.player.posList[0]
         distance = 0
 
+        detectItem = False
+        detectBody = False
+
         sensingPoint = sensingPoint + direction
         distance += 1
 
         detect = np.zeros(3)
         while(not self.wallCollide(sensingPoint)) :
+            color = None
+            rect = pygame.Rect((sensingPoint[1] * PIXEL_SIZE, sensingPoint[0] * PIXEL_SIZE), (5,5))
+
             if(not detectItem and self.itemCollide(sensingPoint)) :
+                detectItem = True
                 detect[0] = 1
+                color = YELLOW
             
             if(not detectBody and self.bodyCollide(sensingPoint)) :
+                detectBody = True
                 detect[1] = 1
+                color = RED
+
+            if SEE_VISION :
+                if color is None :
+                    pygame.draw.rect(self.screen, WHITE, rect)
+                else :
+                    pygame.draw.rect(self.screen, color, rect)
 
             sensingPoint = sensingPoint + direction
             distance += 1
-
+            
         detect[2] = 1 / distance
-
+        
         return detect
 
     def calcFitness(self) :
@@ -162,7 +216,7 @@ class SnakeGame :
 
 class Snake :
     def __init__(self) :
-        self.posList = np.array([[0, 2], [0, 1], [0, 0]])
+        self.posList = np.array([[1, 2], [1, 1], [1, 0]])
         self.direction = RIGHT
 
     def draw(self, screen) :
