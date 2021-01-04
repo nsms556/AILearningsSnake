@@ -1,7 +1,8 @@
 import numpy as np
+import os.path
 
 class SnakeNet() :
-    def __init__(self, hidden = 10) :
+    def __init__(self, hidden = 10, pre_weight = None) :
         self.fitness = 0
         self.hidden = hidden
 

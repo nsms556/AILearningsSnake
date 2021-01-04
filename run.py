@@ -79,3 +79,10 @@ except Static.BreakException :
     pygame.quit()
     print(fitness_list)
     print('World Best Fitness : {}'.format(max(fitness_list)))
+'''
+print('Save Best Weight ? (y/n)')y
+saved = input()
+
+if saved == 'y' :
+    np.savez('BW', best[0])
+'''

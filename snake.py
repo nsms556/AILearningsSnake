@@ -1,6 +1,7 @@
 import os, random
 from datetime import timedelta, datetime
 from time import sleep
+import math
 
 import numpy as np
 import pygame
@@ -28,14 +29,10 @@ class SnakeGame :
         
         self.fitness = 0
         self.last_distance = np.inf
-        self.timer = 0
         self.lastItemTime = 0
+        self.lifeTime = LIFE_TIME
 
         while not self.done :
-            self.timer += 0.1
-            if self.fitness < -FPS / 2 or self.timer - self.lastItemTime > 0.1 * FPS * 5 :
-                self.done = True
-
             self.clock.tick(FPS)
             self.screen.fill(BLACK)
 
@@ -63,13 +60,15 @@ class SnakeGame :
             if all(self.player.posList[0] == self.item.position) :
                 self.player.grow()
                 self.score += 1
-                self.lastItemTime = self.timer
+                self.lifeTime = LIFE_TIME
                 self.item.newPosition()
+                #self.fitness += self.score * 30
 
                 while self.item.position in self.player.posList :
                     self.item.newPosition()
             else :
                 self.player.move()
+                self.lifeTime -= 1
 
             if self.player.posList[0].tolist() in self.player.posList[1:].tolist() :
                 self.done = True
@@ -77,12 +76,11 @@ class SnakeGame :
             if self.wallCollide(self.player.posList[0]) :
                 self.done = True
 
-            current_distance = np.linalg.norm(self.player.posList[0] - self.item.position)
-            if self.last_distance > current_distance :
-                self.fitness += 1.
-            else :
-                self.fitness -= 1.5
-            self.last_distance = current_distance
+            if self.lifeTime <= 0 and self.nn is not None:
+                self.done = True
+
+            self.fitness = self.calcFitness()
+            #self.fitness = self.calcFitness_2(self.fitness)
 
             self.player.draw(self.screen)
             self.item.draw(self.screen)
@@ -122,9 +120,6 @@ class SnakeGame :
 
     def detection(self, direction) :
         sensingPoint = self.player.posList[0]
-        detectItem = False
-        detectBody = False
-
         distance = 0
 
         sensingPoint = sensingPoint + direction
@@ -133,11 +128,9 @@ class SnakeGame :
         detect = np.zeros(3)
         while(not self.wallCollide(sensingPoint)) :
             if(not detectItem and self.itemCollide(sensingPoint)) :
-                detectItem = True
                 detect[0] = 1
             
             if(not detectBody and self.bodyCollide(sensingPoint)) :
-                detectBody = True
                 detect[1] = 1
 
             sensingPoint = sensingPoint + direction
@@ -147,9 +140,29 @@ class SnakeGame :
 
         return detect
 
+    def calcFitness(self) :
+        if self.score < 10 :
+            fitness = math.floor(self.lifeTime * self.lifeTime) * math.pow(2, self.score)
+        else :
+            fitness = math.floor(self.lifeTime * self.lifeTime) * math.pow(2, 10) * (score - 9)
+
+        return fitness
+
+    def calcFitness_2(self, fitness) :
+        current_distance = np.linalg.norm(self.player.posList[0] - self.item.position)
+
+        if self.last_distance > current_distance :
+            fitness += 1.
+        else :
+            fitness -= 1.5
+
+        self.last_distance = current_distance
+
+        return fitness
+
 class Snake :
     def __init__(self) :
-        self.posList = np.array([(0,2), (0,1), (0,0)])
+        self.posList = np.array([[0, 2], [0, 1], [0, 0]])
         self.direction = RIGHT
 
     def draw(self, screen) :

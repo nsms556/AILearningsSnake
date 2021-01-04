@@ -3,7 +3,7 @@ from random import randint
 import pygame
 
 HM_FPS = 15
-NN_FPS = 165
+NN_FPS = 60
 
 SCREEN_SIZE = 20
 PIXEL_SIZE = 20
@@ -52,3 +52,4 @@ N_POPULATION = 50
 N_BEST = 5
 N_CHILDREN = 5
 MUTATION_RATE = 0.4
+LIFE_TIME = NN_FPS * 10
