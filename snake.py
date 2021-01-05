@@ -75,11 +75,15 @@ class SnakeGame :
             if self.nn != None :
                 inputs = self.get_inputs()
                 outputs = self.nn.forward(inputs)
-                result = np.argmax(outputs)
-
+                #result = np.argmax(outputs)
+                result = np.argsort(outputs)
+                
                 #print(outputs)
-                self.player.direction = MOVE_NN_DIR[result]
-                lastCtrlTime = datetime.now()
+                for possible in result :
+                    if self.player.direction + MOVE_NN_DIR[possible] != MOVE_LIMIT :
+                        self.player.direction = MOVE_NN_DIR[possible]
+                        lastCtrlTime = datetime.now()
+                        break
 
             if all(self.player.posList[0] == self.item.position) :
                 self.player.grow()
@@ -100,17 +104,19 @@ class SnakeGame :
 
             if self.player.posList[0].tolist() in self.player.posList[1:].tolist() :
                 self.done = True
+                print('Body')
 
             if self.wallCollide(self.player.posList[0]) :
                 self.done = True
+                print('Wall')
 
             if self.lifeLeft <= 0 and self.nn is not None:
                 self.done = True
 
             if self.distanceFit :
-                self.fitness = self.calcFitness_2(self.fitness)
+                self.fitness = self.calcDistancefit(self.fitness)
             else :
-                self.fitness = self.calcFitness()
+                self.fitness = self.calcTimeFit()
             
             self.item.draw(self.screen)
             self.player.draw(self.screen)
@@ -191,10 +197,14 @@ class SnakeGame :
             distance += 1
             
         detect[2] = 1 / distance
-        
+
+        if SEE_VISION :
+            head = pygame.Rect((self.player.posList[0][1] * PIXEL_SIZE, self.player.posList[0][0] * PIXEL_SIZE), (5,5))
+            pygame.draw.rect(self.screen, YELLOW, head)
+
         return detect
 
-    def calcFitness(self) :
+    def calcTimeFit(self) :
         if self.score < 10 :
             fitness = math.floor(self.lifeTime * self.lifeTime) * math.pow(2, self.score)
         else :
@@ -202,7 +212,7 @@ class SnakeGame :
 
         return fitness
 
-    def calcFitness_2(self, fitness) :
+    def calcDistancefit(self, fitness) :
         current_distance = np.linalg.norm(self.player.posList[0] - self.item.position)
 
         if self.last_distance > current_distance :
