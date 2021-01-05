@@ -28,3 +28,6 @@ class SnakeNet() :
 
     def leaky_relu(self, x):
         return np.where(x > 0, x, x * 0.01)
+
+    def sigmoid(self, x) :
+        return 1 / (1 + np.exp(-x))
