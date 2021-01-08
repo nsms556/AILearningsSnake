@@ -52,15 +52,15 @@ class SnakeNet() :
     def mutate(self, bestModel, rate) :
         childModel = deepcopy(self)
 
-        mutation = np.random.random_sample(childModel.shape) < rate
+        mutation = np.random.random_sample(childModel.w1.shape) < rate
         uniform_mutation = np.random.uniform(size = childModel.w1.shape)
         childModel.w1[mutation] += uniform_mutation[mutation] * (bestModel.w1[mutation] - childModel.w1[mutation])
 
-        mutation = np.random.random_sample(childModel.shape) < rate
+        mutation = np.random.random_sample(childModel.w2.shape) < rate
         uniform_mutation = np.random.uniform(size = childModel.w2.shape)
         childModel.w2[mutation] += uniform_mutation[mutation] * (bestModel.w2[mutation] - childModel.w2[mutation])
 
-        mutation = np.random.random_sample(childModel.shape) < rate
+        mutation = np.random.random_sample(childModel.w3.shape) < rate
         uniform_mutation = np.random.uniform(size = childModel.w3.shape)
         childModel.w3[mutation] += uniform_mutation[mutation] * (bestModel.w3[mutation] - childModel.w3[mutation])
 
