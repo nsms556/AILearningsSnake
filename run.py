@@ -24,6 +24,8 @@ try :
             game = SnakeGame(nn = net)
             fitness, score = game.play()
 
+            #if score == 0 and fitness > 10000 :
+            #    fitness /= 10
             net.fitness = fitness
             print('Gen {} : Net Number {} of {} -> Fitness : {}, Score {}'.format(generation, i, len(nets), fitness, score))
         
@@ -40,27 +42,16 @@ try :
         best = deepcopy(nets[:N_BEST])
 
         for i in range(N_CHILDREN):
-            new_genome = deepcopy(best[0])
-            a_genome = random.choice(best)
-            b_genome = random.choice(best)
+            aParent = best[0]
+            bParent = random.choice(best[1:N_BEST])
+            child = aParent.crossover(bParent)
 
-            cut = random.randint(0, new_genome.w1.shape[1])
-            new_genome.w1[i, :cut] = a_genome.w1[i, :cut]
-            new_genome.w1[i, cut:] = b_genome.w1[i, cut:]
-
-            cut = random.randint(0, new_genome.w2.shape[1])
-            new_genome.w2[i, :cut] = a_genome.w2[i, :cut]
-            new_genome.w2[i, cut:] = b_genome.w2[i, cut:]
-
-            cut = random.randint(0, new_genome.w3.shape[1])
-            new_genome.w3[i, :cut] = a_genome.w3[i, :cut]
-            new_genome.w3[i, cut:] = b_genome.w3[i, cut:]
-
-            best.append(new_genome)
+            best.append(child)
 
         nets = []
         for i in range(int(N_POPULATION / (N_BEST + N_CHILDREN))):
-            for bg in best:
+            for model in best:
+                '''
                 new_genome = deepcopy(bg)
 
                 mean = 20
@@ -72,8 +63,10 @@ try :
                     new_genome.w2 += new_genome.w2 * np.random.normal(mean, stddev, size=(Static.HIDDEN_SIZE, Static.HIDDEN_SIZE)) / 100 * np.random.randint(-1, 2, (Static.HIDDEN_SIZE, Static.HIDDEN_SIZE))
                 if random.uniform(0, 1) < MUTATION_RATE:
                     new_genome.w3 += new_genome.w3 * np.random.normal(mean, stddev, size=(Static.HIDDEN_SIZE, Static.OUTPUT_SIZE)) / 100 * np.random.randint(-1, 2, (Static.HIDDEN_SIZE, Static.OUTPUT_SIZE))
-                
-                nets.append(new_genome)        
+                '''
+
+                child = model.mutate(best[0], MUTATION_RATE)
+                nets.append(child)        
 
 except Static.BreakException :
     pygame.quit()

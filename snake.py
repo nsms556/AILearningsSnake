@@ -104,11 +104,9 @@ class SnakeGame :
 
             if self.player.posList[0].tolist() in self.player.posList[1:].tolist() :
                 self.done = True
-                print('Body')
 
             if self.wallCollide(self.player.posList[0]) :
                 self.done = True
-                print('Wall')
 
             if self.lifeLeft <= 0 and self.nn is not None:
                 self.done = True

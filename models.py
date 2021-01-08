@@ -1,4 +1,7 @@
 import numpy as np
+from copy import deepcopy
+from random import choice, randint, uniform
+
 from Snake_Statics import INPUT_SIZE, HIDDEN_SIZE, OUTPUT_SIZE
 
 class SnakeNet() :
@@ -31,3 +34,43 @@ class SnakeNet() :
 
     def sigmoid(self, x) :
         return 1 / (1 + np.exp(-x))
+
+    def crossover(self, crossModel) :
+        childModel = deepcopy(self)
+
+        cut = randint(0, childModel.w1.shape[1])
+        childModel.w1[0, cut:] = crossModel.w1[0, cut:]
+
+        cut = randint(0, childModel.w2.shape[1])
+        childModel.w2[0, cut:] = crossModel.w2[0, cut:]
+
+        cut = randint(0, childModel.w3.shape[1])
+        childModel.w3[0, cut:] = crossModel.w3[0, cut:]
+
+        return childModel
+
+    def mutate(self, bestModel, rate) :
+        childModel = deepcopy(self)
+
+        mutation = np.random.random_sample(childModel.shape) < rate
+        uniform_mutation = np.random.uniform(size = childModel.w1.shape)
+        childModel.w1[mutation] += uniform_mutation[mutation] * (bestModel.w1[mutation] - childModel.w1[mutation])
+
+        mutation = np.random.random_sample(childModel.shape) < rate
+        uniform_mutation = np.random.uniform(size = childModel.w2.shape)
+        childModel.w2[mutation] += uniform_mutation[mutation] * (bestModel.w2[mutation] - childModel.w2[mutation])
+
+        mutation = np.random.random_sample(childModel.shape) < rate
+        uniform_mutation = np.random.uniform(size = childModel.w3.shape)
+        childModel.w3[mutation] += uniform_mutation[mutation] * (bestModel.w3[mutation] - childModel.w3[mutation])
+
+        '''
+        if uniform(0, 1) < rate :
+            childModel.w1 += childModel.w1 * np.random.normal(mean, stddev, size=(INPUT_SIZE, HIDDEN_SIZE)) / 100 * np.random.randint(-1, 2, (INPUT_SIZE, HIDDEN_SIZE))
+        if uniform(0, 1) < rate :
+            childModel.w2 += childModel.w2 * np.random.normal(mean, stddev, size=(HIDDEN_SIZE, HIDDEN_SIZE)) / 100 * np.random.randint(-1, 2, (HIDDEN_SIZE, HIDDEN_SIZE))
+        if uniform(0, 1) < rate :
+            childModel.w3 += childModel.w3 * np.random.normal(mean, stddev, size=(HIDDEN_SIZE, OUTPUT_SIZE)) / 100 * np.random.randint(-1, 2, (HIDDEN_SIZE, OUTPUT_SIZE))
+        '''
+
+        return childModel
