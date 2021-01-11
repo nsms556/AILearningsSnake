@@ -9,9 +9,14 @@ class SnakeNet() :
         self.fitness = 0
         self.hidden = hidden
 
-        self.w1 = np.random.randn(INPUT_SIZE, hidden)
-        self.w2 = np.random.randn(hidden, hidden)
-        self.w3 = np.random.randn(hidden, OUTPUT_SIZE)
+        if pre_weight is None :
+            self.w1 = np.random.randn(INPUT_SIZE, hidden)
+            self.w2 = np.random.randn(hidden, hidden)
+            self.w3 = np.random.randn(hidden, OUTPUT_SIZE)
+            self.weights = np.array([self.w1, self.w2, self.w3], dtype=object)
+        else :
+            self.weights = np.load(pre_weight, allow_pickle=True)
+            self.w1, self.w2, self.w3 = self.weights
 
     def forward(self, inputs) :
         net = np.matmul(inputs, self.w1)
@@ -63,14 +68,5 @@ class SnakeNet() :
         mutation = np.random.random_sample(childModel.w3.shape) < rate
         uniform_mutation = np.random.uniform(size = childModel.w3.shape)
         childModel.w3[mutation] += uniform_mutation[mutation] * (bestModel.w3[mutation] - childModel.w3[mutation])
-
-        '''
-        if uniform(0, 1) < rate :
-            childModel.w1 += childModel.w1 * np.random.normal(mean, stddev, size=(INPUT_SIZE, HIDDEN_SIZE)) / 100 * np.random.randint(-1, 2, (INPUT_SIZE, HIDDEN_SIZE))
-        if uniform(0, 1) < rate :
-            childModel.w2 += childModel.w2 * np.random.normal(mean, stddev, size=(HIDDEN_SIZE, HIDDEN_SIZE)) / 100 * np.random.randint(-1, 2, (HIDDEN_SIZE, HIDDEN_SIZE))
-        if uniform(0, 1) < rate :
-            childModel.w3 += childModel.w3 * np.random.normal(mean, stddev, size=(HIDDEN_SIZE, OUTPUT_SIZE)) / 100 * np.random.randint(-1, 2, (HIDDEN_SIZE, OUTPUT_SIZE))
-        '''
 
         return childModel

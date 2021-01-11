@@ -10,7 +10,7 @@ import Snake_Statics as Static
 
 pygame.init()
 
-nets = [SnakeNet() for _ in range(N_POPULATION)]
+nets = [SnakeNet(pre_weight='BW0.npy') for _ in range(N_POPULATION)]
 best = None
 fitness_list = []
 
@@ -51,20 +51,6 @@ try :
         nets = []
         for i in range(int(N_POPULATION / (N_BEST + N_CHILDREN))):
             for model in best:
-                '''
-                new_genome = deepcopy(bg)
-
-                mean = 20
-                stddev = 10
-
-                if random.uniform(0, 1) < MUTATION_RATE:
-                    new_genome.w1 += new_genome.w1 * np.random.normal(mean, stddev, size=(Static.INPUT_SIZE, Static.HIDDEN_SIZE)) / 100 * np.random.randint(-1, 2, (Static.INPUT_SIZE, Static.HIDDEN_SIZE))
-                if random.uniform(0, 1) < MUTATION_RATE:
-                    new_genome.w2 += new_genome.w2 * np.random.normal(mean, stddev, size=(Static.HIDDEN_SIZE, Static.HIDDEN_SIZE)) / 100 * np.random.randint(-1, 2, (Static.HIDDEN_SIZE, Static.HIDDEN_SIZE))
-                if random.uniform(0, 1) < MUTATION_RATE:
-                    new_genome.w3 += new_genome.w3 * np.random.normal(mean, stddev, size=(Static.HIDDEN_SIZE, Static.OUTPUT_SIZE)) / 100 * np.random.randint(-1, 2, (Static.HIDDEN_SIZE, Static.OUTPUT_SIZE))
-                '''
-
                 child = model.mutate(best[0], MUTATION_RATE)
                 nets.append(child)        
 
@@ -73,9 +59,9 @@ except Static.BreakException :
     print(fitness_list)
     print('World Best Fitness : {}'.format(max(fitness_list)))
 '''
-print('Save Best Weight ? (y/n)')y
+print('Save Best Weight ? (y/n)')
 saved = input()
 
 if saved == 'y' :
-    np.savez('BW', best[0])
+    np.save('./Snake/BW', best[0].weights)
 '''
