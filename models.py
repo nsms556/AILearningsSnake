@@ -54,7 +54,24 @@ class SnakeNet() :
 
         return childModel
 
-    def mutate(self, bestModel, rate) :
+    def mutate_Gaussian(self, rate) :
+        childModel = deepcopy(self)
+        
+        mutation = np.random.random_sample(self.w1.shape) < rate
+        gaussian = np.random.normal(size=self.w1.shape)
+        childModel.w1[mutation] += gaussian[mutation]
+
+        mutation = np.random.random_sample(self.w2.shape) < rate
+        gaussian = np.random.normal(size=self.w2.shape)
+        childModel.w2[mutation] += gaussian[mutation]
+
+        mutation = np.random.random_sample(self.w3.shape) < rate
+        gaussian = np.random.normal(size=self.w3.shape)
+        childModel.w3[mutation] += gaussian[mutation]
+
+        return childModel
+
+    def mutate_best_base(self, bestModel, rate) :
         childModel = deepcopy(self)
 
         mutation = np.random.random_sample(childModel.w1.shape) < rate
@@ -70,3 +87,4 @@ class SnakeNet() :
         childModel.w3[mutation] += uniform_mutation[mutation] * (bestModel.w3[mutation] - childModel.w3[mutation])
 
         return childModel
+    
