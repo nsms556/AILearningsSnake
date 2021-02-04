@@ -2,7 +2,8 @@ import random
 from copy import deepcopy
 
 import numpy as np
-from models import SnakeNet
+#from models import SnakeNet
+from NewModel import SnakeNet
 
 import pygame
 from snake import *
@@ -10,7 +11,7 @@ import Snake_Statics as Static
 
 pygame.init()
 
-#nets = [SnakeNet(pre_weight='./Snake/BW0.npy') for _ in range(N_POPULATION)]
+#nets = [SnakeNet(pre_weight='./Snake/BW1.npy') for _ in range(N_POPULATION)]
 nets = [SnakeNet() for _ in range(N_POPULATION)]
 best = None
 fitness_list = []
@@ -21,15 +22,15 @@ try :
     while True :
         generation += 1
         
+        if best is not None :
+            nets.extend(best)
+
         for i, net in enumerate(nets) :
             game = SnakeGame(nn = net)
             fitness, score = game.play()
 
             net.fitness = fitness
-            print('Gen {} : Net Number {} of {} -> Fitness : {}, Score {}'.format(generation, i, len(nets), fitness, score))
-        
-        if best is not None :
-            nets.extend(best)
+            print('Gen {} Number {} of {} : Fitness {}, Score {}'.format(generation, i, len(nets), fitness, score))
         
         nets.sort(key = lambda x: x.fitness, reverse=True)
         print("Gen {}'s Best Fitness {}".format(generation, nets[0].fitness))
@@ -38,8 +39,8 @@ try :
         best = deepcopy(nets[:N_BEST])
 
         for i in range(N_CHILDREN):
-            aParent = best[0]
-            bParent = random.choice(best[1:N_BEST])
+            aParent = random.choice(best)
+            bParent = random.choice(best)
             child = aParent.crossover(bParent)
 
             best.append(child)
@@ -55,10 +56,9 @@ except Static.BreakException :
     pygame.quit()
     print(fitness_list)
     print('World Best Fitness : {}'.format(max(fitness_list)))
-'''
+
 print('Save Best Weight ? (y/n)')
 saved = input()
 
 if saved == 'y' :
     np.save('./Snake/BW', best[0].weights)
-'''
