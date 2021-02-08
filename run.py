@@ -17,6 +17,7 @@ fitness_list = []
 best = None
 bw = None
 bf = 0
+bs = 0
 generation = 0
 
 try :
@@ -29,12 +30,13 @@ try :
         for i, net in enumerate(nets) :
             game = SnakeGame(nn = net)
             fitness, score = game.play()
+            bs = score if score > bs else bs
 
             net.fitness = fitness
             print('Gen {} Number {} of {} : Fitness {}, Score {}'.format(generation, i, len(nets), fitness, score))
         
         nets.sort(key = lambda x: x.fitness, reverse=True)
-        print("Gen {}'s Best Fitness {}".format(generation, nets[0].fitness))
+        print("Gen {}'s Best Fitness {} Score {}".format(generation, nets[0].fitness, bs))
         fitness_list.append(nets[0].fitness)
 
         best = deepcopy(nets[:N_BEST])
