@@ -47,6 +47,19 @@ class SnakeNet() :
         childModel.w2[0, cut:] = crossModel.w2[0, cut:]
 
         return childModel
+    
+    def mutate_Random(self, rate) :
+        childModel = deepcopy(self)
+        
+        mutation = np.random.random_sample(self.w1.shape) < rate
+        gaussian = np.random.normal(size=self.w1.shape)
+        childModel.w1[mutation] = gaussian[mutation]
+
+        mutation = np.random.random_sample(self.w2.shape) < rate
+        gaussian = np.random.normal(size=self.w2.shape)
+        childModel.w2[mutation] = gaussian[mutation]
+
+        return childModel
 
     def mutate_Gaussian(self, rate) :
         childModel = deepcopy(self)
