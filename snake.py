@@ -87,7 +87,7 @@ class SnakeGame :
             if all(self.player.posList[0] == self.item.position) :
                 self.player.grow()
                 self.score += 1
-                self.lifeLeft = LIFE_LEFT + (self.score / 2)
+                self.lifeLeft = LIFE_LEFT + (self.score / 2 * NN_FPS)
                 self.item.newPosition()
 
                 while self.item.position in self.player.posList :
