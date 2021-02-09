@@ -8,6 +8,6 @@
 
 
 ---
-21.02.09
-
+21.02.09  
+유전 알고리즘 세대별 fitness 최고점
 ![fitting history](https://github.com/nsms556/AILearningsSnake/blob/master/doc/fitting%20history%200-100%20210209.png?raw=true)
