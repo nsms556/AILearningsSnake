@@ -10,5 +10,4 @@
 ---
 21.02.09
 
-![image](https://user-images.githubusercontent.com/59404670/107368116-7f60a680-6b23-11eb-96d0-3db6a1c425c9.png)
-![image](https://github.com/nsms556/AILearningsSnake/blob/master/doc/fitting%20history%200-100%20210209.png?raw=true)
+![fitting history](https://github.com/nsms556/AILearningsSnake/blob/master/doc/fitting%20history%200-100%20210209.png?raw=true)
