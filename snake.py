@@ -90,7 +90,7 @@ class SnakeGame :
                 self.lifeLeft = LIFE_LEFT + (self.score / 2 * NN_FPS)
                 self.item.newPosition()
 
-                while self.item.position in self.player.posList :
+                while self.item.position.tolist() in self.player.posList.tolist() :
                     self.item.newPosition()
 
                 if self.distanceFit :
