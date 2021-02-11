@@ -11,9 +11,10 @@ import Snake_Statics as Static
 
 pygame.init()
 
-#nets = [SnakeNet(pre_weight='./Snake/BW.npy') for _ in range(N_POPULATION)]
+#nets = [SnakeNet(pre_weight='./Snake/weights/BW.npy') for _ in range(N_POPULATION)]
 nets = [SnakeNet() for _ in range(N_POPULATION)]
 fitness_list = []
+score_list = []
 best = None
 bw = None
 bf = 0
@@ -27,6 +28,7 @@ try :
         if best is not None :
             nets.extend(best)
 
+        bs = 0
         for i, net in enumerate(nets) :
             game = SnakeGame(nn = net)
             fitness, score = game.play()
@@ -38,6 +40,7 @@ try :
         nets.sort(key = lambda x: x.fitness, reverse=True)
         print("Gen {}'s Best Fitness {} Score {}".format(generation, nets[0].fitness, bs))
         fitness_list.append(nets[0].fitness)
+        score_list.append(bs)
 
         best = deepcopy(nets[:N_BEST])
         if nets[0].fitness >= bf :
@@ -62,10 +65,10 @@ try :
 except Static.BreakException :
     pygame.quit()
     print(fitness_list)
-    print('World Best Fitness : {}'.format(max(fitness_list)))
+    print('World Best {} {}'.format(max(fitness_list), max(score_list)))
 
 print('Save Best Weight ? (y/n)')
 saved = input()
 
 if saved == 'y' :
-    np.save('./Snake/BW', bw)
+    np.save('./Snake/weights/BW', bw)
