@@ -11,8 +11,8 @@ import Snake_Statics as Static
 
 pygame.init()
 
-#nets = [SnakeNet(pre_weight='./Snake/weights/BW.npy') for _ in range(N_POPULATION)]
-nets = [SnakeNet() for _ in range(N_POPULATION)]
+nets = [SnakeNet(pre_weight='./AILearningsSnake/weights/BW.npy') for _ in range(N_POPULATION)]
+#nets = [SnakeNet() for _ in range(N_POPULATION)]
 fitness_list = []
 score_list = []
 best = None
@@ -71,4 +71,4 @@ print('Save Best Weight ? (y/n)')
 saved = input()
 
 if saved == 'y' :
-    np.save('./Snake/weights/BW', bw)
+    np.save('./AILearningsSnake/weights/BW', bw)
