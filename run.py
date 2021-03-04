@@ -2,7 +2,6 @@ import random
 from copy import deepcopy
 
 import numpy as np
-#from models import SnakeNet
 from NewModel import SnakeNet
 
 import pygame
