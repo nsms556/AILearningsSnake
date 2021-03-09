@@ -4,8 +4,8 @@ from copy import deepcopy
 import numpy as np
 from NewModel import SnakeNet
 
-from Snake_Visoff import *
-import statics as Static
+from nonVisual.Snake_Visoff import *
+import nonVisual.statics as Static
 
 nets = [SnakeNet(pre_weight='./AILearningsSnake/weights/BW.npy') for _ in range(N_POPULATION)]
 #nets = [SnakeNet() for _ in range(N_POPULATION)]
@@ -31,6 +31,7 @@ try :
             bs = score if score > bs else bs
 
             net.fitness = fitness
+            print('Gen {} Number {} of {} : Fitness {}, Score {}'.format(generation, i, len(nets), fitness, score))
             
         nets.sort(key = lambda x: x.fitness, reverse=True)
         print("Gen {}'s Best Fitness {} Score {}".format(generation, nets[0].fitness, bs))
@@ -55,7 +56,7 @@ try :
                 child = model.mutate_Random(MUTATION_RATE)
                 nets.append(child)        
 
-except Static.BreakException :
+except KeyboardInterrupt :
     print(fitness_list)
     print(score_list)
     print('World Best {} {}'.format(max(fitness_list), max(score_list)))

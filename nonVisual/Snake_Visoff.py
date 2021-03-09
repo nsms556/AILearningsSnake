@@ -5,7 +5,7 @@ import math
 
 import numpy as np
 
-from statics import *
+from nonVisual.statics import *
 
 class SnakeGame :
     def __init__(self, nn=None) :
@@ -20,7 +20,6 @@ class SnakeGame :
         lastCtrlTime = datetime.now()
         self.score = 0
         self.fitness = 0
-        self.last_distance = np.inf
         self.lastItemTime = 0
         self.lifeTime = 0
         self.lifeLeft = LIFE_LEFT
@@ -94,7 +93,7 @@ class SnakeGame :
         return baseInput
 
     def detection(self, direction) :
-        sensingPoint = self.player.posList[0]
+        sensingPoint = self.player.posList[0].copy()
         distance = 0
 
         detectItem = False
@@ -115,9 +114,9 @@ class SnakeGame :
 
             sensingPoint += direction
             distance += 1
-
+            
         detect[2] = 1 / distance
-
+        
         return detect
     
     def calcGeneralFit(self) :
