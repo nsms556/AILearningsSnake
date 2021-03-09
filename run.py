@@ -2,15 +2,16 @@ import random
 from copy import deepcopy
 
 import numpy as np
-from NewModel import SnakeNet
 
 import pygame
+
 from snake import *
-import Snake_Statics as Static
+from utils.Snake_Statics import *
+from models.NewModel import SnakeNet
 
 pygame.init()
 
-nets = [SnakeNet(pre_weight='./AILearningsSnake/weights/BW.npy') for _ in range(N_POPULATION)]
+nets = [SnakeNet(pre_weight='./weights/BW.npy') for _ in range(N_POPULATION)]
 #nets = [SnakeNet() for _ in range(N_POPULATION)]
 fitness_list = []
 score_list = []
@@ -62,7 +63,7 @@ try :
                 child = model.mutate_Random(MUTATION_RATE)
                 nets.append(child)        
 
-except Static.BreakException :
+except BreakException :
     pygame.quit()
     print(fitness_list)
     print(score_list)
@@ -72,4 +73,4 @@ print('Save Best Weight ? (y/n)')
 saved = input()
 
 if saved == 'y' :
-    np.save('./AILearningsSnake/weights/BW', bw)
+    np.save('./weights/BW', bw)

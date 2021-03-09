@@ -15,7 +15,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 import torchvision.transforms as T
 
-from Snake_Statics import *
+from utils.Snake_Statics import *
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 

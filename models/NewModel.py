@@ -2,7 +2,7 @@ import numpy as np
 from copy import deepcopy
 from random import choice, randint, uniform
 
-from Snake_Statics import INPUT_SIZE, HIDDEN_SIZE, OUTPUT_SIZE
+from utils.Snake_Statics import INPUT_SIZE, HIDDEN_SIZE, OUTPUT_SIZE
 
 class SnakeNet() :
     def __init__(self, hidden = HIDDEN_SIZE, pre_weight = None) :

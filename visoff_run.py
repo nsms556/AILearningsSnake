@@ -2,12 +2,12 @@ import random
 from copy import deepcopy
 
 import numpy as np
-from NewModel import SnakeNet
+from models.NewModel import SnakeNet
 
 from nonVisual.Snake_Visoff import *
 import nonVisual.statics as Static
 
-nets = [SnakeNet(pre_weight='./AILearningsSnake/weights/BW.npy') for _ in range(N_POPULATION)]
+nets = [SnakeNet(pre_weight='./weights/BW.npy') for _ in range(N_POPULATION)]
 #nets = [SnakeNet() for _ in range(N_POPULATION)]
 fitness_list = []
 score_list = []
