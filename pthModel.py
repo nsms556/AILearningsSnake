@@ -1,26 +1,47 @@
-import os
+import math
+import random
+
+from collections import namedtuple
+from itertools import count
+from PIL import Image
+
+import numpy as np
+import matplotlib
+import matplotlib.pyplot as plt
 
 import torch
 import torch.nn as nn
+import torch.optim as optim
 import torch.nn.functional as F
+import torchvision.transforms as T
 
 from Snake_Statics import *
 
-class SnakeNet(nn.Module) :
-    def __init__(self) :
-        super(SnakeNet, self).__init__()
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-        self.linear1 = nn.Linear(INPUT_SIZE, HIDDEN_SIZE)
-        self.linear2 = nn.Linear(HIDDEN_SIZE, OUTPUT_SIZE)
+Transition = namedtuple('Transition', ('state', 'action', 'next_state', 'reward'))
 
-    def forward(self, x) :
-        x = F.relu(self.linear1(x))
-        x = self.linear2(x)
+class ReplayMemory(object) :
+    def __init__(self, capacity) :
+        self.capacity = capacity
+        self.memory = []
+        self.position = 0
 
-        return x
+    def push(self, *args) :
+        if len(self.memory) < self.capacity :
+            self.memory.append(None)
+        
+        self.memory[self.position] = Transition(*args)
+        self.position = (self.position + 1 ) % self.capacity
 
-    def save(self, fileName = 'model.pth') :
-        filePath = './weights'
+    def sample(self, batchSize) :
+        return random.sample(self.memory, batchSize)
 
-        fullPath = os.path.join(filePath, fileName)
-        torch.save(self.state_dict(), fullPath)
+    def __len__(self) :
+        return len(self.memory)
+
+class DQN(nn.Module) :
+    def __init__(self, h, w, outputs) :
+        super(DQN, self).__init__()
+        self.conv1 = nn.Conv2d(3, 16, kernel_size = 5, stride=2)
+        
