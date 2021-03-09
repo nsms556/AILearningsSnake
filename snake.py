@@ -150,15 +150,7 @@ class SnakeGame :
 
         for i, direction in enumerate(DETECT_DIRS) :
             baseInput[i*3:i*3+3] = self.detection(direction)
-        
-        head = self.player.posList[0]
-        
-        # Straight
-        #if np.any(head == self.item.position) and np.sum(head * DIRECTIONS[self.player.direction]) <= \
-        #   np.sum(self.item.position * DIRECTIONS[self.player.direction]) :
-        #    baseInput[24] = 1
 
-        #print(baseInput)
         return baseInput
 
     def detection(self, direction) :
