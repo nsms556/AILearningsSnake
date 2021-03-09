@@ -162,7 +162,7 @@ class SnakeGame :
         return baseInput
 
     def detection(self, direction) :
-        sensingPoint = self.player.posList[0]
+        sensingPoint = self.player.posList[0].copy()
         distance = 0
 
         detectItem = False
