@@ -3,7 +3,6 @@ import random
 
 from collections import namedtuple
 from itertools import count
-from PIL import Image
 
 import numpy as np
 import matplotlib
