@@ -7,6 +7,7 @@ import numpy as np
 
 from nonVisual.statics import *
 import utils.utils as U
+import utils.AIUtils as AIU
 
 class SnakeGame :
     def __init__(self, nn=None) :
@@ -26,7 +27,7 @@ class SnakeGame :
 
         while not self.done :
             if self.nn != None :
-                inputs = self.get_inputs()
+                inputs = AIU.get_inputs(self.player.posList, self.item.position, INPUT_SIZE, DETECT_DIRS)
                 outputs = self.nn.forward(inputs)
                 result = np.argsort(outputs)
 
@@ -62,44 +63,9 @@ class SnakeGame :
             if self.lifeLeft <= 0 and self.nn is not None :
                 self.done = True
 
-            self.fitness = U.calcFitness()
+            self.fitness = U.calcFitness(self.lifeTime, self.score)
             
         return self.fitness, self.score
-
-    def get_inputs(self) :
-        baseInput = np.zeros(shape = INPUT_SIZE)
-
-        for i, direction in enumerate(DETECT_DIRS) :
-            baseInput[i*3:i*3+3] = self.detection(direction)
-        
-        return baseInput
-
-    def detection(self, direction) :
-        sensingPoint = self.player.posList[0].copy()
-        distance = 0
-
-        detectItem = False
-        detectBody = False
-
-        sensingPoint += direction
-        distance += 1
-
-        detect = np.zeros(3)
-        while not self.wallCollide(sensingPoint) :
-            if not detectItem and self.itemCollide(sensingPoint) :
-                detectItem = True
-                detect[0] = 1
-
-            if not detectBody and self.bodyCollide(sensingPoint) :
-                detectBody = True
-                detect[1] = 1
-
-            sensingPoint += direction
-            distance += 1
-            
-        detect[2] = 1 / distance
-        
-        return detect
 
 class Snake :
     def __init__(self) :
