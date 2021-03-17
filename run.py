@@ -7,7 +7,7 @@ import pygame
 
 from snake import *
 from utils.Snake_Statics import *
-from models.NewModel import SnakeNet
+from models.numpyModel import SnakeNet
 
 pygame.init()
 

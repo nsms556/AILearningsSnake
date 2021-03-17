@@ -2,7 +2,7 @@ import random
 from copy import deepcopy
 
 import numpy as np
-from models.NewModel import SnakeNet
+from models.numpyModel import SnakeNet
 
 from nonVisual.Snake_Visoff import *
 import nonVisual.statics as Static
@@ -65,4 +65,4 @@ print('Save Best Weight ? (y/n)')
 saved = input()
 
 if saved == 'y' :
-    np.save('./AILearningsSnake/weights/BW', bw)
+    np.save('./weights/BW', bw)
