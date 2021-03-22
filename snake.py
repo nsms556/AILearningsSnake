@@ -121,58 +121,6 @@ class SnakeGame :
 
         return self.fitness, self.score
 
-    '''
-        def get_inputs(self) :
-        baseInput = np.zeros(shape = INPUT_SIZE)
-
-        for i, direction in enumerate(DETECT_DIRS) :
-            baseInput[i*3:i*3+3] = self.detection(direction)
-
-        return baseInput
-
-        def detection(self, direction) :
-        sensingPoint = self.player.posList[0].copy()
-        distance = 0
-
-        detectItem = False
-        detectBody = False
-
-        sensingPoint = sensingPoint + direction
-        distance += 1
-
-        detect = np.zeros(3)
-        while(not U.wallCollide(sensingPoint)) :
-            color = None
-            rect = pygame.Rect((sensingPoint[1] * PIXEL_SIZE, sensingPoint[0] * PIXEL_SIZE), (5,5))
-
-            if(not detectItem and U.itemCollide(sensingPoint, self.item.position)) :
-                detectItem = True
-                detect[0] = 1
-                color = YELLOW
-            
-            if(not detectBody and U.bodyCollide(sensingPoint, self.player.posList)) :
-                detectBody = True
-                detect[1] = 1
-                color = RED
-
-            if SEE_VISION :
-                if color is None :
-                    pygame.draw.rect(self.screen, WHITE, rect)
-                else :
-                    pygame.draw.rect(self.screen, color, rect)
-
-            sensingPoint = sensingPoint + direction
-            distance += 1
-            
-        detect[2] = 1 / distance
-
-        if SEE_VISION :
-            head = pygame.Rect((self.player.posList[0][1] * PIXEL_SIZE, self.player.posList[0][0] * PIXEL_SIZE), (5,5))
-            pygame.draw.rect(self.screen, YELLOW, head)
-
-        return detect
-    '''
-
 class Snake :
     def __init__(self) :
         self.posList = np.array([[1, 2], [1, 1], [1, 0]])

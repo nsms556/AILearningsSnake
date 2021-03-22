@@ -35,7 +35,6 @@ try :
             bs = score if score > bs else bs
 
             net.fitness = fitness
-            #net.fitness = score
             print('Gen {} Number {} of {} : Fitness {}, Score {}'.format(generation, i, len(nets), fitness, score))
         
         nets.sort(key = lambda x: x.fitness, reverse=True)
@@ -58,16 +57,14 @@ try :
         nets = []
         for i in range(int(N_POPULATION / (N_BEST + N_CHILDREN))):
             for model in best:
-                #child = model.mutate_best_base(best[0], MUTATION_RATE)
-                #child = model.mutate_Gaussian(MUTATION_RATE)
                 child = model.mutate_Random(MUTATION_RATE)
                 nets.append(child)        
 
 except BreakException :
     pygame.quit()
-    print(fitness_list)
-    print(score_list)
-    print('World Best {} {}'.format(max(fitness_list), max(score_list)))
+
+print(score_list)
+print('World Best {} {}'.format(max(fitness_list), max(score_list)))
 
 print('Save Best Weight ? (y/n)')
 saved = input()
