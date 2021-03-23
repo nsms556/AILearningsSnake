@@ -23,3 +23,7 @@
 21.03.03
 세대별 최고 점수
 ![score History](https://github.com/nsms556/AILearningsSnake/blob/master/doc/scorehistory210303.png?raw=true)
+
+21.03.16
+세대별 최고 점수
+![score History](https://github.com/nsms556/AILearningsSnake/blob/master/doc/scorehistory210316.png?raw=true)
