@@ -1,12 +1,13 @@
 import numpy as np
 
 import utils.utils as U
+from utils.Snake_Statics import DETECT_DIRS
 
-def get_inputs(positions, itemP, inputSize, directions) :
+def get_inputs(inputSize, game) :
     baseInput = np.zeros(shape = inputSize)
     
-    for i, direction in enumerate(directions) :
-        baseInput[i*3:i*3+3] = detection(positions, itemP, direction)
+    for i, direction in enumerate(DETECT_DIRS) :
+        baseInput[i*3:i*3+3] = detection(game.player.posList, game.item.position, direction)
     
     return baseInput
 
